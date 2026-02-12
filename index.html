@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Hex to Binary Exporter</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        textarea { width: 100%; height: 200px; font-family: monospace; }
+        .controls { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h2>16進数バイナリエクスポート</h2>
+    <textarea id="hexInput" placeholder="例: 48 65 6c 6c 6f (スペースや改行は自動で無視されます)"></textarea>
+    
+    <div class="controls">
+        ファイル名: <input type="text" id="fileName" value="data.bin">
+        <button onclick="downloadBinary()">バイナリとして保存</button>
+    </div>
+
+    <script>
+        function downloadBinary() {
+            const hexText = document.getElementById('hexInput').value;
+            // スペース、改行、タブ、カンマを除去
+            const cleanHex = hexText.replace(/[\s,]/g, '');
+            
+            if (cleanHex.length % 2 !== 0) {
+                alert("16進数の文字数が不正です（偶数である必要があります）");
+                return;
+            }
+
+            // Uint8Arrayに変換
+            const byteArray = new Uint8Array(cleanHex.length / 2);
+            for (let i = 0; i < cleanHex.length; i += 2) {
+                byteArray[i / 2] = parseInt(cleanHex.substr(i, 2), 16);
+            }
+
+            // Blob作成とダウンロード実行
+            const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            a.href = url;
+            a.download = document.getElementById('fileName').value || 'data.bin';
+            document.body.appendChild(a);
+            a.click();
+            
+            // 後片付け
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 0);
+        }
+    </script>
+</body>
+</html>
