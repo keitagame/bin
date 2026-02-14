@@ -20,7 +20,7 @@
 
     <script>
         function downloadBinary() {
-            const hexText = document.getElementById('hexInput').value;
+            let hexText = document.getElementById('hexInput').value;
             // スペース、改行、タブ、カンマを除去
             
             hexText = hexText.replace(/;.*$/gm, '');
