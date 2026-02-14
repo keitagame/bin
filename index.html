@@ -22,12 +22,19 @@
         function downloadBinary() {
             const hexText = document.getElementById('hexInput').value;
             // スペース、改行、タブ、カンマを除去
+            
+            hexText = hexText.replace(/;.*$/gm, '');
+
+            // スペース、改行、タブ、カンマを除去
             const cleanHex = hexText.replace(/[\s,]/g, '');
             
+            if (cleanHex.length === 0) return; // 空の場合は何もしない
+
             if (cleanHex.length % 2 !== 0) {
                 alert("16進数の文字数が不正です（偶数である必要があります）");
                 return;
             }
+            
 
             // Uint8Arrayに変換
             const byteArray = new Uint8Array(cleanHex.length / 2);
